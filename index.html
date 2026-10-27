@@ -1,0 +1,103 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#ebe6dd">
+<meta name="color-scheme" content="light dark">
+<title>Aether Mechanica</title>
+<meta name="description" content="Articulated mechanical specimen — an interactive exploded study of a four-wing ornithopter.">
+<link rel="stylesheet" href="./css/tokens.css">
+<link rel="stylesheet" href="./css/frame.css">
+<link rel="stylesheet" href="./css/hud.css">
+<link rel="stylesheet" href="./css/controls.css">
+<link rel="stylesheet" href="./css/annotations.css">
+<link rel="stylesheet" href="./css/responsive.css">
+</head>
+<body>
+<main id="app" class="app is-intro">
+  <svg id="bp" class="bp" aria-hidden="true"></svg>
+  <canvas id="gl" aria-label="Three-dimensional model of the ornithopter. Drag to orbit, scroll or pinch to zoom."></canvas>
+  <svg id="leaders" class="leaders" aria-hidden="true"></svg>
+  <div id="labels" class="labels"></div>
+  <div class="grain" aria-hidden="true"></div>
+
+  <header class="hud hud-tl" data-hud>
+    <p class="micro">Project Nº 01 — Articulated Mechanical Specimen — Study 01</p>
+    <h1 class="title"><span>Aether</span> <em>Mechanica</em></h1>
+    <p class="micro sub">Concept Nº 01 · Articulated Flight System · 1:1 Study</p>
+  </header>
+
+  <aside class="hud hud-tr" data-hud aria-label="Specimen, finish, materials and status">
+    <div class="theme-toggle specimen-toggle" id="specimens" role="group" aria-label="Specimen"></div>
+    <div class="theme-toggle" role="group" aria-label="Finish">
+      <button type="button" data-theme-btn="azure" aria-pressed="true"><i class="sw sw-gold"></i><span>Azure &amp; Gold</span></button>
+      <button type="button" data-theme-btn="obsidian" aria-pressed="false"><i class="sw sw-obsidian"></i><span>Obsidian</span></button>
+    </div>
+    <ul class="chips">
+      <li><button type="button" class="chip" data-mat="azure"><i class="sw sw-azure"></i><span data-label="azure">Azure Enamel</span></button></li>
+      <li><button type="button" class="chip" data-mat="gold"><i class="sw sw-gold"></i><span data-label="gold">Gold</span></button></li>
+      <li><button type="button" class="chip" data-mat="pearl"><i class="sw sw-pearl"></i><span data-label="pearl">Pearl</span></button></li>
+    </ul>
+    <p class="status" id="status" data-state="rest"><i class="led"></i><span>At rest</span><em class="asm">Assembly 01</em></p>
+  </aside>
+
+  <section class="hud hud-bl spec" id="spec" data-hud aria-label="Specification">
+    <button type="button" class="spec-toggle micro" aria-expanded="false" aria-controls="spec-body">Spec <span>+</span></button>
+    <div class="spec-body" id="spec-body">
+      <p class="micro">Specification</p>
+      <h2 class="spec-title">Mechanical Ornithopter</h2>
+      <p class="spec-desc">A four-winged clockwork flyer in aged bronze, oxidized steel and ivory enamel. Trace any component with the pointer; select it to isolate.</p>
+      <dl class="spec-table">
+        <div><dt id="spec-l0">Wingspan</dt><dd id="spec-v0">—</dd></div>
+        <div><dt id="spec-l1">Mass</dt><dd id="spec-v1">—</dd></div>
+        <div><dt id="spec-l2">Angle</dt><dd id="spec-v2">—</dd></div>
+        <div><dt id="spec-l3">Rate</dt><dd id="spec-v3">—</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <nav class="hud hud-bc controls" data-hud aria-label="Model controls">
+    <div class="explode">
+      <button type="button" class="xl" data-explode="0">Assembled</button>
+      <input id="explode" type="range" min="0" max="1000" step="1" value="0" aria-label="Explode amount">
+      <button type="button" class="xl" data-explode="1">Exploded</button>
+      <output id="explode-val" class="xv">000%</output>
+    </div>
+    <button type="button" id="flight" class="flight" aria-pressed="false">Take Flight</button>
+    <div class="views" role="group" aria-label="Camera view">
+      <span class="micro vlabel">View</span>
+      <button type="button" data-view="iso" aria-pressed="true">Iso</button>
+      <button type="button" data-view="plan" aria-pressed="false">Plan</button>
+      <button type="button" data-view="front" aria-pressed="false">Front</button>
+      <button type="button" data-view="profile" aria-pressed="false">Profile</button>
+      <button type="button" id="orbit" class="orbit" aria-pressed="false"><i class="orb"></i>Orbit</button>
+    </div>
+  </nav>
+
+  <aside class="hud hud-br legend" data-hud aria-label="Controls and camera">
+    <dl class="hints hints-mouse">
+      <div><dt>Drag</dt><dd>Orbit</dd></div>
+      <div><dt>Scroll</dt><dd>Zoom</dd></div>
+      <div><dt>Right-drag</dt><dd>Pan</dd></div>
+      <div><dt>Double-click</dt><dd>Reset</dd></div>
+    </dl>
+    <dl class="hints hints-touch">
+      <div><dt>1 finger</dt><dd>Orbit</dd></div>
+      <div><dt>Pinch</dt><dd>Zoom</dd></div>
+      <div><dt>2 fingers</dt><dd>Pan</dd></div>
+      <div><dt>Double-tap</dt><dd>Reset</dd></div>
+    </dl>
+    <p class="readout" id="readout">AZ 000.0° · EL 00.0° · DIST 0.00 M · FOV 30°</p>
+    <p class="keys micro">1–4 View · E Explode · F Flight · T Theme · R Reset</p>
+  </aside>
+
+  <aside class="inspector" id="inspector" aria-live="polite" aria-hidden="true"></aside>
+  <div class="gl-notice micro" id="gl-notice" hidden>Restoring viewport…</div>
+</main>
+<!--APP:START-->
+<script type="importmap">{"imports":{"three":"./vendor/three.module.js"}}</script>
+<script type="module" src="./src/main.js"></script>
+<!--APP:END-->
+</body>
+</html>

@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Selftest</title>
+<style>
+  html, body { margin: 0; background: #050405; color: #e8e0cf; font: 12px/1.5 ui-monospace, Menlo, Consolas, monospace; }
+  header { padding: 20px 24px 8px; }
+  h1 { margin: 0 0 4px; font: 400 20px Georgia, serif; }
+  #summary { color: #c7a063; letter-spacing: .08em; }
+  table { border-collapse: collapse; margin: 8px 24px 40px; width: calc(100% - 48px); }
+  td { padding: 5px 10px; border-top: 1px solid rgba(232,224,207,.12); vertical-align: top; }
+  td:first-child { width: 64px; }
+  .pass { color: #9fc49a; } .fail { color: #e0876a; } .info { color: rgba(232,224,207,.55); }
+  #stage { position: fixed; left: -10000px; top: 0; }
+  iframe { border: 0; background: #050405; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Aether Mechanica — selftest</h1>
+  <div id="summary">Running…</div>
+</header>
+<table id="out"></table>
+<div id="stage"></div>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js"}}</script>
+<script type="module" src="./selftest.js"></script>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DPR check</title>
+<style>
+  html, body { margin: 0; background: #050405; color: #e8e0cf; font: 12px/1.5 ui-monospace, Consolas, monospace; }
+  #stage { position: fixed; left: -10000px; top: 0; }
+  pre { margin: 16px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<pre id="out">Đang render 32 trạng thái golden…</pre>
+<div id="stage"></div>
+<script type="module">
+// Ảnh canvas của 32 trạng thái golden có phụ thuộc devicePixelRatio của MÁY không (app vẫn ép DPR vẽ = 1)?
+// Chạy trong Edge headless --force-device-scale-factor=1 / 1.25 / 1.5 rồi so mã băm: cùng GPU nên phải trùng
+// từng byte. Trước khi làm tròn vùng an toàn, số đo chữ của HUD lệch 0.01–0.03 px theo DPR đủ làm khung dịch.
+import { loadApp, goldenStates, applyGoldenState, grab, GOLDEN_QUERY } from './harness.js';
+const out = document.getElementById('out');
+const stage = document.getElementById('stage');
+/** FNV-1a 32-bit trên dữ liệu điểm ảnh. @param {Uint8ClampedArray} d */
+const hash = (d) => { let h = 0x811c9dc5; for (let i = 0; i < d.length; i++) { h ^= d[i]; h = Math.imul(h, 0x01000193); } return (h >>> 0).toString(16); };
+// ?blocks=a.png,b.png: thêm mã băm từng ô 16×16 của các trạng thái đó → so được VÙNG nào khác giữa hai DPR
+const want = new Set((new URLSearchParams(location.search).get('blocks') || '').split(',').filter(Boolean));
+const res = { dpr: devicePixelRatio, hashes: {}, safe: {}, blocks: {}, fits: {} };
+for (const sp of ['ornithopter', 'husky']) {
+  const { f, am, win } = await loadApp(stage, 1440, 900, GOLDEN_QUERY + '&specimen=' + sp);
+  res.safe[sp] = am.layout.safe;
+  res.fits[sp] = am.cam.fits;
+  const gl = win.document.getElementById('gl');
+  for (const s of goldenStates(sp)) {
+    applyGoldenState(am, s);
+    const img = grab(gl).data;
+    res.hashes[s.name] = hash(img.data);
+    if (want.has(s.name)) {
+      const W = img.width, H = img.height, rows = [];
+      for (let by = 0; by < H; by += 16) {
+        let row = '';
+        for (let bx = 0; bx < W; bx += 16) {
+          let h = 0x811c9dc5;
+          for (let y = by; y < Math.min(by + 16, H); y++)
+            for (let x = bx; x < Math.min(bx + 16, W); x++) { const i = (y * W + x) * 4; for (let c = 0; c < 4; c++) { h ^= img.data[i + c]; h = Math.imul(h, 0x01000193); } }
+          row += ((h >>> 0) % 36).toString(36); // 1 ký tự/ô: đủ để thấy ô nào khác
+        }
+        rows.push(row);
+      }
+      res.blocks[s.name] = rows;
+    }
+  }
+  f.remove();
+}
+out.textContent = JSON.stringify(res, null, 1);
+await fetch('/__bench/probe.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(res) });
+</script>
+</body>
+</html>

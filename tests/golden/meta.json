@@ -1,0 +1,50 @@
+{
+  "capturedAt": "2026-09-24T16:51:42.498Z",
+  "source": "../index.html",
+  "query": "still&theme=azure&dpr=1&aa=0",
+  "states": [
+    "ornithopter-azure-iso-e0.png",
+    "ornithopter-azure-iso-e1.png",
+    "ornithopter-azure-plan-e0.png",
+    "ornithopter-azure-plan-e1.png",
+    "ornithopter-azure-front-e0.png",
+    "ornithopter-azure-front-e1.png",
+    "ornithopter-azure-profile-e0.png",
+    "ornithopter-azure-profile-e1.png",
+    "ornithopter-obsidian-iso-e0.png",
+    "ornithopter-obsidian-iso-e1.png",
+    "ornithopter-obsidian-plan-e0.png",
+    "ornithopter-obsidian-plan-e1.png",
+    "ornithopter-obsidian-front-e0.png",
+    "ornithopter-obsidian-front-e1.png",
+    "ornithopter-obsidian-profile-e0.png",
+    "ornithopter-obsidian-profile-e1.png",
+    "husky-azure-iso-e0.png",
+    "husky-azure-iso-e1.png",
+    "husky-azure-plan-e0.png",
+    "husky-azure-plan-e1.png",
+    "husky-azure-front-e0.png",
+    "husky-azure-front-e1.png",
+    "husky-azure-profile-e0.png",
+    "husky-azure-profile-e1.png",
+    "husky-obsidian-iso-e0.png",
+    "husky-obsidian-iso-e1.png",
+    "husky-obsidian-plan-e0.png",
+    "husky-obsidian-plan-e1.png",
+    "husky-obsidian-front-e0.png",
+    "husky-obsidian-front-e1.png",
+    "husky-obsidian-profile-e0.png",
+    "husky-obsidian-profile-e1.png"
+  ],
+  "env": {
+    "renderer": "ANGLE (NVIDIA, NVIDIA GeForce MX550 (0x00001F9F) Direct3D11 vs_5_0 ps_5_0, D3D11)",
+    "antialias": false,
+    "dpr": 1,
+    "canvas": [
+      1440,
+      900
+    ],
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/2.7032.0 Chrome/152.0.7977.130 Safari/537.36 MSIX",
+    "hostDpr": 1.25
+  }
+}

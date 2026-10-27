@@ -1,0 +1,101 @@
+/* Tokens — hai chủ đề theo ảnh tham chiếu.
+   Obsidian (mặc định của :root): nền đen ấm, mực ngà, điểm nhấn đồng.
+   Azure & Gold ([data-finish="azure"]): nền kem sáng, mực nâu than, điểm nhấn vàng — bản bạn chọn.
+   Dùng data-finish (không phải data-theme): khi đăng thành Artifact, nền tảng tự gắn
+   data-theme="light/dark" lên thẻ gốc theo giao diện người xem — trùng tên sẽ đè nhau.
+   Không gradient xanh tím, không neon. */
+:root {
+  --bg: #050405;
+  --bg-2: #0a0807;
+  --ink: #e8e0cf;
+  --ink-2: rgba(232, 224, 207, 0.66);
+  --ink-3: rgba(232, 224, 207, 0.42);
+  --ink-4: rgba(232, 224, 207, 0.26);
+  --line: rgba(232, 224, 207, 0.16);
+  --line-2: rgba(232, 224, 207, 0.08);
+  --brass: #c7a063;
+  --brass-2: #a8834a;
+  --brass-ink: #150f08;
+  --hot: #e3bd7d;
+  --copper: #b0704f;
+  --azure: #71869a;
+  --carbon: #45454a;
+  --panel: rgba(5, 4, 5, 0.88);
+  --vig-0: #0c0a08;
+  --vig-1: #070605;
+  --vig-2: #040303;
+  --grain: 0.028;
+
+  /* 0 request ra ngoài: chỉ dùng font có sẵn trong máy */
+  --serif: "Iowan Old Style", Didot, "Palatino Linotype", "Book Antiqua", Palatino, Georgia, serif;
+  --mono: ui-monospace, Menlo, "Cascadia Mono", Consolas, "Liberation Mono", monospace;
+  --sans: -apple-system, "Segoe UI", system-ui, sans-serif;
+
+  --micro: 9.5px;
+  --track: 0.2em;
+  --pad: 40px;
+  --ease: cubic-bezier(0.2, 0.7, 0.2, 1);
+
+  color-scheme: dark;
+}
+
+:root[data-finish="azure"] {
+  --bg: #ebe6dd;
+  --bg-2: #e2dcd1;
+  --ink: #2a241d;
+  --ink-2: rgba(42, 36, 29, 0.72);
+  --ink-3: rgba(42, 36, 29, 0.5);
+  --ink-4: rgba(42, 36, 29, 0.34);
+  --line: rgba(42, 36, 29, 0.18);
+  --line-2: rgba(42, 36, 29, 0.09);
+  --brass: #a17c2e;
+  --brass-2: #c9a24b;
+  --brass-ink: #1d1508;
+  --hot: #8a6418;
+  --copper: #b27a5a;
+  --azure: #3358c9;
+  --carbon: #1d2d63;
+  --panel: rgba(240, 236, 228, 0.92);
+  --vig-0: #f4f0e9;
+  --vig-1: #ebe6dd;
+  --vig-2: #d9d2c6;
+  --grain: 0.045;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  height: 100%;
+  overflow: hidden;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  -webkit-text-size-adjust: 100%;
+  text-rendering: optimizeLegibility;
+  transition: background-color 500ms var(--ease);
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+button:focus-visible, input:focus-visible {
+  outline: 1px solid var(--brass);
+  outline-offset: 3px;
+}
+
+.micro {
+  margin: 0;
+  font: 400 var(--micro) / 1.55 var(--mono);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}

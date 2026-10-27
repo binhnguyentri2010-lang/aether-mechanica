@@ -1,0 +1,9 @@
+html, body { margin: 0; height: 100%; overflow: hidden; background: #050405; }
+#c { display: block; width: 100vw; height: 100vh; touch-action: none; }
+.status {
+  position: fixed; left: 24px; bottom: 24px;
+  font: 11px/1.6 ui-monospace, Menlo, "Cascadia Mono", Consolas, monospace;
+  letter-spacing: .16em; text-transform: uppercase; color: #e8e0cf;
+  white-space: pre;
+}
+.status.fail { color: #e0876a; }

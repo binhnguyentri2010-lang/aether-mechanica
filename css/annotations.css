@@ -1,0 +1,68 @@
+/* Nhãn + leader. Leader 0.75px ivory ~60%; hover → sáng, đồng. */
+.labels {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  pointer-events: none;
+}
+.lbl {
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: block;
+  padding: 1px 0;
+  text-align: left;
+  pointer-events: auto;
+  white-space: nowrap;
+  font: 400 var(--micro) / 1.35 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  opacity: 0;
+  transition: opacity 400ms var(--ease), color 200ms var(--ease);
+  will-change: transform;
+}
+.lbl.left { text-align: right; }
+.lbl .no { color: var(--brass); margin-right: 9px; }
+.lbl.left .no { margin-right: 9px; }
+.lbl .nm { color: inherit; }
+.lbl .sub {
+  display: block;
+  margin-top: 1px;
+  font-size: 8.5px;
+  letter-spacing: 0.16em;
+  color: var(--ink-4);
+}
+[data-vp="tablet"] .lbl .sub, [data-vp="mobile"] .lbl .sub, [data-vp="phone-landscape"] .lbl .sub { display: none; }
+
+.in-labels .lbl { opacity: 1; transition-delay: calc(var(--i) * 40ms), 0ms; }
+.is-ready .lbl { transition-delay: 0ms; }
+.lbl.off { opacity: 0 !important; pointer-events: none; }
+.lbl.occ { opacity: 0.35; }
+.lbl.dim { opacity: 0.4; }
+.lbl.hot { color: var(--ink); opacity: 1; }
+.lbl.hot .no { color: var(--hot); }
+
+/* Leader */
+.ann .ldr {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 0.75;
+  stroke-opacity: 0.58;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;
+  transition: stroke-dashoffset 700ms var(--ease), stroke-opacity 200ms var(--ease), stroke 200ms var(--ease);
+}
+.ann .ring { fill: none; stroke: var(--ink); stroke-width: 0.75; stroke-opacity: 0; transition: stroke-opacity 400ms var(--ease); }
+.ann .dot { fill: var(--ink); fill-opacity: 0; transition: fill-opacity 400ms var(--ease); }
+.in-leaders .ann .ldr { stroke-dashoffset: 0; transition-delay: calc(var(--i) * 40ms), 0ms, 0ms; }
+.in-leaders .ann .ring { stroke-opacity: 0.7; }
+.in-leaders .ann .dot { fill-opacity: 0.95; }
+.is-ready .ann .ldr { transition-delay: 0ms; }
+.ann.off { display: none; }
+.ann.occ .ldr { stroke-opacity: 0.22; }
+.ann.occ .ring, .ann.occ .dot { stroke-opacity: 0.3; fill-opacity: 0.35; }
+.ann.dim .ldr { stroke-opacity: 0.22; }
+.ann.hot .ldr { stroke: var(--hot); stroke-opacity: 1; }
+.ann.hot .ring { stroke: var(--hot); stroke-opacity: 1; }
+.ann.hot .dot { fill: var(--hot); }

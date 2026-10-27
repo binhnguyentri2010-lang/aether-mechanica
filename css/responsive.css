@@ -1,0 +1,89 @@
+/* Responsive (plan §20).
+   ≥1280: dải dưới 3 cột · 700–1279: thanh điều khiển full-width sát đáy, spec + legend tầng trên
+   <700 dọc: gọn, spec gập được · điện thoại ngang (cao < 500): tối giản. */
+
+@media (max-width: 1279px) {
+  :root { --pad: 30px; }
+  .hud-bc {
+    left: var(--pad);
+    right: var(--pad);
+    transform: translateY(4px);
+    justify-content: space-between;
+    gap: 18px;
+  }
+  .in-hud .hud-bc { transform: none; }
+  .hud-bl { width: 260px; }
+  .hud-br .hints { display: none !important; }
+  .spec-desc { display: none; }
+  .title { font-size: 28px; }
+  /* iPad dọc 834px: khối tiêu đề (463) lấn khối chip (457) → giới hạn bề rộng, dòng micro tự xuống hàng */
+  .hud-tl { max-width: calc(100% - 2 * var(--pad) - 390px); }
+  .chips { gap: 14px; }
+  #explode { width: 120px; }
+}
+
+@media (max-width: 699px) {
+  :root { --pad: 16px; --micro: 9.5px; }
+  /* max-width: none — gỡ giới hạn của màn tablet (trừ 390px cho khối chip), ở đây nó âm và ép
+     tiêu đề thành mỗi từ một dòng */
+  .hud-tl { left: var(--pad); top: calc(env(safe-area-inset-top, 0px) + 14px); right: 110px; max-width: none; }
+  .hud-tl .micro:first-child { display: none; }
+  .title { font-size: 21px; margin: 0 0 5px; }
+  .hud-tl .sub { font-size: 8.5px; letter-spacing: 0.16em; }
+  .hud-tr { right: var(--pad); top: calc(env(safe-area-inset-top, 0px) + 12px); }
+  .chips { display: none; }
+  .theme-toggle { margin-bottom: 6px; }
+  .theme-toggle button { padding: 0 8px; }
+  .theme-toggle button span { display: none; }
+  .specimen-toggle { margin-bottom: 4px; }
+  .sw { width: 8px; height: 8px; }
+  .status { margin-top: 2px; }
+  .status .asm { display: none; }
+
+  .hud-bc {
+    left: var(--pad);
+    right: var(--pad);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 12px);
+    flex-wrap: wrap;
+    row-gap: 10px;
+    justify-content: space-between;
+  }
+  .explode { flex: 1 1 100%; gap: 10px; }
+  #explode { flex: 1; width: auto; }
+  .vlabel { display: none; }
+  .views .orbit { margin-left: 2px; }
+
+  .hud-br { display: none; }
+  /* Thanh điều khiển có 3 hàng (~88px) → nút SPEC nằm hẳn phía trên nó */
+  .hud-bl {
+    left: var(--pad);
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 122px);
+    width: min(300px, calc(100vw - 2 * var(--pad)));
+  }
+  .spec-toggle { display: inline-flex; gap: 8px; color: var(--ink-2); }
+  .spec-body { display: none; padding-top: 10px; }
+  .spec.open .spec-body { display: block; background: var(--panel); }
+  .spec-table { grid-template-columns: repeat(4, auto); gap: 0 12px; }
+
+  .inspector { left: var(--pad); right: var(--pad); width: auto; top: auto; bottom: calc(env(safe-area-inset-bottom, 0px) + 122px); transform: translateY(8px); background: var(--panel); padding-bottom: 10px; }
+  .inspector.open { transform: none; }
+  .has-focus .hud-bl { opacity: 0; pointer-events: none; }
+}
+
+@media (max-height: 499px) and (orientation: landscape) {
+  :root { --pad: 16px; }
+  .hud-tl { top: 10px; }
+  .hud-tl .micro { display: none; }
+  .title { font-size: 19px; margin: 0; }
+  .hud-tr { top: 10px; }
+  .chips, .status { display: none; }
+  .theme-toggle { margin-bottom: 0; }
+  .theme-toggle button { padding: 0 8px; }
+  .theme-toggle button span { display: none; }
+  .hud-bl, .hud-br { display: none; }
+  .hud-bc { bottom: calc(env(safe-area-inset-bottom, 0px) + 8px); flex-wrap: nowrap; }
+  .explode { flex: 0 1 auto; }
+  #explode { width: 110px; }
+  .vlabel { display: none; }
+  .inspector { top: 50%; right: var(--pad); width: 220px; background: var(--panel); }
+}

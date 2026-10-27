@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Golden capture</title>
+<style>
+  html, body { margin: 0; background: #050405; color: #e8e0cf; font: 12px/1.6 ui-monospace, Menlo, Consolas, monospace; }
+  header { padding: 20px 24px; }
+  #log { padding: 0 24px 40px; white-space: pre-wrap; }
+  #stage { position: fixed; left: -10000px; top: 0; }
+</style>
+</head>
+<body>
+<header>Golden capture — 16 ảnh mốc của ornithopter. Chỉ chạy khi cần chụp lại mốc chuẩn.
+  ?from=ref: chụp từ bản ĐÔNG CỨNG trước refactor (tests/reference/pre-p1.html) · ?check: chỉ so, không ghi · ?ab: A/B trực tiếp với bản tham chiếu</header>
+<div id="log"></div>
+<div id="stage"></div>
+<script type="importmap">{"imports":{"three":"../vendor/three.module.js"}}</script>
+<script type="module">
+  import {
+    loadApp, goldenStates, applyGoldenState, grab, compareGoldens, compareWithReference, renderEnv,
+    GOLDEN_QUERY, REFERENCE_PAGE, GOLDEN_SPECIMENS,
+  } from './harness.js';
+  const log = (/** @type {string} */ s) => { document.getElementById('log').textContent += s + '\n'; };
+  const stage = /** @type {HTMLElement} */ (document.getElementById('stage'));
+  const q = new URLSearchParams(location.search);
+  /** @param {() => Promise<any>} fn */
+  const run = (fn) => fn().catch((e) => { log('LOI: ' + (e && e.stack || e)); /** @type {any} */ (window).__golden = { done: true, error: String(e) }; });
+
+  if (q.has('check') || q.has('ab')) run(async () => {
+    const r = q.has('ab') ? await compareWithReference(stage) : await compareGoldens(stage);
+    for (const row of r.rows) log(row);
+    log(r.summary);
+    /** @type {any} */ (window).__golden = { done: true, ...r };
+  });
+  else run(async () => {
+    // ?from=ref: chỉ bướm, từ bản đông cứng trước refactor (bản đó chưa có husky)
+    const fromRef = q.get('from') === 'ref';
+    const page = fromRef ? REFERENCE_PAGE : '../index.html';
+    const specimens = fromRef ? ['ornithopter'] : GOLDEN_SPECIMENS;
+    let ok = 0;
+    /** @type {string[]} */
+    const names = [];
+    /** @type {any} */
+    let env = null;
+    for (const sp of specimens) {
+      const { f, am, win } = await loadApp(stage, 1440, 900, GOLDEN_QUERY + '&specimen=' + sp, page);
+      env = renderEnv(am, win);
+      log('Nguồn: ' + page + ' · ' + sp + ' · ' + JSON.stringify(env));
+      for (const s of goldenStates(sp)) {
+        applyGoldenState(am, s);
+        const { canvas } = grab(win.document.getElementById('gl'));
+        const blob = await new Promise((r) => canvas.toBlob(r, 'image/png'));
+        const res = await fetch('/__golden/' + s.name, { method: 'PUT', body: blob });
+        log((res.ok ? 'OK   ' : 'FAIL ') + s.name + ' (' + res.status + ')');
+        if (res.ok) ok++;
+        names.push(s.name);
+      }
+      f.remove();
+    }
+    const meta = { capturedAt: new Date().toISOString(), source: page, query: GOLDEN_QUERY, states: names, env };
+    const mres = await fetch('/__golden/meta.json', { method: 'PUT', body: JSON.stringify(meta, null, 2) });
+    log('meta.json ' + mres.status);
+    log('Xong: ' + ok + '/' + names.length);
+    /** @type {any} */ (window).__golden = { done: true, ok, total: names.length, meta: mres.ok };
+  });
+</script>
+</body>
+</html>

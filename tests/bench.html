@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bench</title>
+<style>
+  html, body { margin: 0; background: #050405; color: #e8e0cf; font: 12px/1.55 ui-monospace, Menlo, Consolas, monospace; }
+  header { padding: 20px 24px 6px; }
+  h1 { margin: 0 0 4px; font: 400 20px Georgia, serif; }
+  #env, #summary { color: #c7a063; letter-spacing: .04em; white-space: pre-wrap; }
+  table { border-collapse: collapse; margin: 8px 24px 24px; width: calc(100% - 48px); }
+  td, th { padding: 4px 10px; border-top: 1px solid rgba(232,224,207,.12); text-align: left; vertical-align: top; }
+  th { color: rgba(232,224,207,.55); font-weight: 400; }
+  .pass { color: #9fc49a; } .fail { color: #e0876a; } .info { color: rgba(232,224,207,.55); }
+  /* App đo phải HIỂN THỊ thật: nằm ngoài màn hình thì IntersectionObserver của app tạm dừng vòng lặp và
+     trình duyệt không trình chiếu canvas → số khung rơi vô nghĩa. Đo xong iframe bị gỡ, lộ bảng kết quả. */
+  #stage { position: fixed; left: 0; top: 0; z-index: 1; }
+  iframe { border: 0; }
+  p.note { margin: 0 24px 16px; color: rgba(232,224,207,.55); max-width: 900px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Aether Mechanica — bench</h1>
+  <div id="env">Đang đo…</div>
+  <div id="summary"></div>
+</header>
+<p class="note">Chạy trên bản production (dist/aether-mechanica.html) ở 1440×900, DPR 1, MSAA như production. App hiện
+  trên màn hình trong lúc đo; đo xong mới hiện bảng này. Mỗi khung đo được vẽ theo nhịp rAF (một khung mỗi lần màn hình làm
+  tươi, như khi dùng thật) — vẽ dồn liên tục sẽ làm hàng đợi GPU đầy và CPU bị tính gộp thời gian chờ GPU. CPU = thời gian
+  update + gửi lệnh vẽ (không readPixels). GPU = EXT_disjoint_timer_query_webgl2 nếu trình duyệt cho phép, không thì ghi
+  "không đo được". Khung rơi chỉ đo được khi trang đang hiển thị. Số chạy trong khung trình duyệt của app chỉ là tham khảo —
+  hãy mở trang này trực tiếp trong Chrome/Cốc Cốc trên máy của bạn, <b>cắm sạc</b>, không mở DevTools, không chạm chuột
+  trong lúc đo. ?quick = 1 lần lặp, ít khung hơn.</p>
+<table id="out"><thead><tr><th>Kết quả</th><th>Kịch bản</th><th>Số đo</th></tr></thead><tbody></tbody></table>
+<div id="stage"></div>
+<script type="module" src="./bench.js"></script>
+</body>
+</html>

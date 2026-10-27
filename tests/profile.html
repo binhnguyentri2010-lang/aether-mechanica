@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Profile</title>
+<style>
+  html, body { margin: 0; background: #050405; color: #e8e0cf; font: 12px/1.55 ui-monospace, Menlo, Consolas, monospace; }
+  header { padding: 20px 24px 6px; }
+  h1 { margin: 0 0 4px; font: 400 20px Georgia, serif; }
+  #out { margin: 8px 24px 24px; white-space: pre-wrap; }
+  /* Như bench: app phải HIỂN THỊ thật (IntersectionObserver của app dừng vòng lặp khi khuất). */
+  #stage { position: fixed; left: 0; top: 0; z-index: 1; }
+  iframe { border: 0; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Aether Mechanica — đo tách chi phí mỗi khung</h1>
+  <div>Không ngưỡng PASS/FAIL (ngưỡng ở bench.html). Mỗi cấu hình: 120 khung làm nóng + 600 khung xoay camera, mỗi khung
+    một nhịp rAF. Để cửa sổ này ở trước mặt khoảng 2 phút.</div>
+</header>
+<pre id="out"></pre>
+<div id="stage"></div>
+<script type="module" src="./profile.js"></script>
+</body>
+</html>

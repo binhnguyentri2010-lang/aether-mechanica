@@ -1,0 +1,204 @@
+/* HUD: chữ nhỏ, tinh — museum archive + engineering manual. Không card, không bo góc dashboard. */
+.hud {
+  position: absolute;
+  z-index: 4;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 700ms var(--ease), transform 700ms var(--ease);
+}
+.in-hud .hud { opacity: 1; transform: none; }
+
+/* ── Top-left ─────────────────────────────────────────────────────────────── */
+.hud-tl { left: var(--pad); top: calc(var(--pad) - 6px); max-width: 520px; }
+.title {
+  margin: 10px 0 9px;
+  font: 400 32px/1 var(--serif);
+  letter-spacing: 0.01em;
+  color: var(--ink);
+}
+.title em { font-style: italic; color: var(--brass); }
+.hud-tl .sub { color: var(--ink-4); }
+
+/* ── Top-right ────────────────────────────────────────────────────────────── */
+.hud-tr { right: var(--pad); top: calc(var(--pad) - 4px); text-align: right; }
+.hud-tr { display: flex; flex-direction: column; align-items: flex-end; }
+.chips {
+  display: flex;
+  gap: 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  justify-content: flex-end;
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font: 400 var(--micro) / 1 var(--mono);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  color: var(--ink-2);
+  transition: color 200ms var(--ease);
+}
+.chip:hover, .chip:focus-visible { color: var(--ink); }
+.chip.static { color: var(--ink-4); }
+.sw { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.sw-azure { background: var(--azure); }
+.sw-gold { background: var(--brass-2); }
+.sw-pearl { background: #efece6; box-shadow: inset 0 0 0 1px var(--ink-4); }
+.sw-obsidian { background: #17120f; box-shadow: inset 0 0 0 1px var(--ink-4); }
+
+/* Chủ đề: nút đôi dạng viên thuốc mảnh như ảnh tham chiếu */
+.theme-toggle {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  margin-bottom: 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+}
+.theme-toggle button {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  height: 20px;
+  padding: 0 10px;
+  border-radius: 999px;
+  font: 400 var(--micro) / 1 var(--mono);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  transition: color 200ms var(--ease), background 200ms var(--ease);
+}
+.theme-toggle button:hover { color: var(--ink); }
+.theme-toggle button[aria-pressed="true"] { color: var(--ink); background: var(--line-2); box-shadow: inset 0 0 0 1px var(--line); }
+/* Chọn mẫu vật: cùng dáng viên thuốc với nút chủ đề; số hiệu mẫu màu đồng */
+.specimen-toggle { margin-bottom: 8px; }
+.specimen-toggle b { font-weight: 400; color: var(--brass); }
+.specimen-toggle button.preparing span { color: var(--ink-4); }
+/* Chế độ lite (máy yếu, bậc hạ chất lượng cuối): bỏ lớp grain phủ toàn màn */
+.is-lite .grain { display: none; }
+/* Đang chuyển mẫu: nhãn + leader của mẫu cũ lặng đi trước khi cảnh tối hẳn */
+.is-switching .lbl, .is-switching .ann { opacity: 0 !important; transition: opacity 200ms var(--ease); }
+
+.status {
+  margin: 12px 0 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 400 var(--micro) / 1 var(--mono);
+  letter-spacing: var(--track);
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.status .asm { font-style: normal; margin-left: 14px; color: var(--ink-4); }
+.led { width: 5px; height: 5px; border-radius: 50%; background: var(--ink-4); transition: background 300ms; }
+.status[data-state="motion"] .led { background: var(--brass); box-shadow: 0 0 6px rgba(199, 160, 99, 0.7); }
+.status[data-state="exploded"] .led { background: var(--ink-2); }
+
+/* ── Bottom-left: specification ───────────────────────────────────────────── */
+/* Spec và legend nằm tầng trên thanh điều khiển (thanh sát đáy) — giống bố cục ảnh tham chiếu.
+   Ba cột trên cùng một dải không vừa: đo thật spec 292 + thanh 860 + legend 306 > 1440px. */
+.hud-bl { left: var(--pad); bottom: calc(var(--pad) + 38px); width: 292px; }
+.spec-toggle { display: none; }
+.spec-title {
+  margin: 8px 0 8px;
+  font: 400 19px/1.15 var(--serif);
+  color: var(--ink);
+}
+.spec-desc {
+  margin: 0 0 14px;
+  font: 400 11.5px/1.55 var(--sans);
+  color: var(--ink-3);
+}
+.spec-table {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 0 18px;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+}
+.spec-table dt {
+  font: 400 8.5px/1.4 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.spec-table dd {
+  margin: 4px 0 0;
+  font: 400 13px/1 var(--serif);
+  color: var(--ink);
+  white-space: nowrap;
+}
+
+/* ── Bottom-right: legend ─────────────────────────────────────────────────── */
+.hud-br { right: var(--pad); bottom: calc(var(--pad) + 38px); text-align: right; }
+.hints {
+  display: grid;
+  grid-template-columns: repeat(4, auto);
+  gap: 0 16px;
+  margin: 0 0 10px;
+  justify-content: end;
+}
+.hints dt {
+  font: 400 8.5px/1.4 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+}
+.hints dd {
+  margin: 2px 0 0;
+  font: 400 8.5px/1.4 var(--mono);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.hints-touch { display: none; }
+.is-touch .hints-mouse { display: none; }
+.is-touch .hints-touch { display: grid; }
+.readout {
+  margin: 0 0 4px;
+  font: 400 var(--micro) / 1.5 var(--mono);
+  letter-spacing: 0.14em;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: pre;
+}
+.keys { color: var(--ink-4); }
+
+/* ── Inspector (click một bộ phận) ────────────────────────────────────────── */
+.inspector {
+  position: absolute;
+  z-index: 5;
+  right: var(--pad);
+  top: 50%;
+  width: 236px;
+  padding: 14px 0 0;
+  border-top: 1px solid var(--line);
+  transform: translate(8px, -50%);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 400ms var(--ease), transform 400ms var(--ease);
+}
+.inspector::before, .inspector::after {
+  content: "";
+  position: absolute;
+  top: -4px;
+  width: 1px;
+  height: 7px;
+  background: var(--ink-2);
+}
+.inspector::before { left: 0; }
+.inspector::after { right: 0; }
+.inspector.open { opacity: 1; transform: translate(0, -50%); pointer-events: auto; }
+.insp-head { display: flex; justify-content: space-between; color: var(--brass); }
+.insp-count { color: var(--ink-4); }
+.insp-name { margin: 8px 0 8px; font: 400 21px/1.1 var(--serif); color: var(--ink); }
+.insp-desc { margin: 0 0 12px; font: 400 11.5px/1.55 var(--sans); color: var(--ink-3); }
+.insp-table { margin: 0 0 12px; }
+.insp-table div { display: flex; justify-content: space-between; gap: 12px; padding: 5px 0; border-top: 1px solid var(--line-2); }
+.insp-table dt { font: 400 8.5px/1.5 var(--mono); letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-4); }
+.insp-table dd { margin: 0; font: 400 11px/1.5 var(--sans); color: var(--ink-2); text-align: right; }
+.insp-close { color: var(--ink-4); }
+.insp-close:hover { color: var(--ink); }

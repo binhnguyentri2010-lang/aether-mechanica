@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Layout probe</title>
+<style>
+  html, body { margin: 0; background: #050405; color: #e8e0cf; font: 12px/1.5 ui-monospace, Consolas, monospace; }
+  #stage { position: fixed; left: -10000px; top: 0; }
+  pre { margin: 16px; white-space: pre-wrap; }
+</style>
+</head>
+<body>
+<pre id="out"></pre>
+<div id="stage"></div>
+<script type="module">
+// Dò bố cục ở devicePixelRatio của trình duyệt đang chạy (Edge headless --force-device-scale-factor=…):
+// vùng an toàn + khung từng khối HUD ở cấu hình golden. Tìm phần nào của bố cục đổi theo DPR.
+import { loadApp, GOLDEN_QUERY } from './harness.js';
+const out = document.getElementById('out');
+const stage = document.getElementById('stage');
+const res = { dpr: devicePixelRatio, specimens: {} };
+for (const sp of ['ornithopter', 'husky']) {
+  const { f, am, win } = await loadApp(stage, 1440, 900, GOLDEN_QUERY + '&specimen=' + sp);
+  const L = am.layoutOnce();
+  const box = (el) => { const r = el.getBoundingClientRect(); return [+r.left.toFixed(4), +r.top.toFixed(4), +r.right.toFixed(4), +r.bottom.toFixed(4)]; };
+  const huds = {};
+  for (const el of win.document.querySelectorAll('[data-hud]')) {
+    const key = [...el.classList].find((c) => c.startsWith('hud-')) || el.id;
+    huds[key] = { box: box(el), kids: [...el.children].map((c) => `${c.tagName.toLowerCase()}.${c.className}`.slice(0, 30) + ' ' + box(c).join(',')) };
+  }
+  res.specimens[sp] = { safe: L.safe, huds, fits: am.cam.fits };
+  f.remove();
+}
+out.textContent = JSON.stringify(res, null, 1);
+await fetch('/__bench/probe.json', { method: 'PUT', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(res) });
+</script>
+</body>
+</html>
